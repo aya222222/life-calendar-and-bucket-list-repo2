@@ -775,7 +775,7 @@ let defaultEDate =localStorage.getItem('eday') ? eday.pop().date : null;
   function displayWeeks(totalWeek){
   pastSquares.innerHTML = '';
   futureSquares.innerHTML = '';
-    console.log('weekarray has length', totalWeek)
+
     let restWeek = totalWeek - weeksPast;
     let i;
     let count = 0;
@@ -790,8 +790,7 @@ let defaultEDate =localStorage.getItem('eday') ? eday.pop().date : null;
 
 
       displayEvents(weekDiv, i);
-       
-
+     
 
       // squares.appendChild(weekDiv);
       
@@ -851,13 +850,16 @@ let defaultEDate =localStorage.getItem('eday') ? eday.pop().date : null;
       function putYearFlag(squareSection){
       
         if((i-count)%52 == 0 && !((i-count)%364 == 0)){
+        
           const aYear = document.createElement('div');
           aYear.classList.add('a-year');
           aYear.setAttribute('id', `year-${(i-count) / 52}`)
           aYear.innerText = ` ${(i-count) / 52}`;
+            
           yearArray.push(aYear);
           squareSection.appendChild(aYear);
      }else if(i% 365 == 0){
+    
       const aYear = document.createElement('div');
       aYear.classList.add('a-year');
       aYear.setAttribute('id', `year-${i / 365* 7}`)
@@ -886,7 +888,8 @@ let defaultEDate =localStorage.getItem('eday') ? eday.pop().date : null;
           })
         }
         year.addEventListener('click', function(){
-          openYearModal(year, index)
+          openYearModal(year, index);
+         
         })
       })
      
@@ -972,7 +975,7 @@ weekDeleteBtn.addEventListener('click', ()=>{
   yearEventModalContainer.style.display = 'block';
   yearTitle.innerText = `Year ${clickedYear.id.split('year-')[1]}`;
 
-  //if events already exist in a clicked week, get event title from events(localstorage)
+  //if events already exist in a clicked year, get event title from eventsForYear(localstorage)
   eventForYear = eventsInYear.find(e => e.year == clickedYear.id);
   
   //call all eventListners of yearEvents
@@ -1051,7 +1054,7 @@ function clickOutside(e){
     if(e.target == targetModal || e.target == bucketList){
       targetModal.style.display = 'none';
       bucketContents.classList.remove('show-modal');   
-      if(e.target == yearEventModalContainer)  {
+      if(e.target == yearEventModalContainer || e.target == bucketList)  {
         checkYearEvents(); 
       
       }else {
@@ -1065,7 +1068,7 @@ function clickOutside(e){
 
   //if you input text in weekmodal, and close accidently, text is still in modal when you open modal again.
   function checkClickedArray() {
-    //check if there is element that has same id as clicked week in clickedArray
+    //check if there is element that has same id as clicked week in clickedArray.if it already exists, delete from array and push the newest one in array.
     if(clickedArray.length){
       let findClickedWeek = clickedArray.find(el=>
         {
@@ -1073,7 +1076,7 @@ function clickOutside(e){
         }
       )
       if(findClickedWeek){
-        console.log('same',  clicked.id)
+        
         clickedArray.splice(clickedArray.indexOf(findClickedWeek), 1);
       
         
@@ -1090,6 +1093,7 @@ function clickOutside(e){
 
   //if year event exists, change color of year flag when you close year modal
   function checkYearEvents() {
+    console.log('checkYearEvents invoked, year-id is' + clickedYear)
     if(yearEvents.childElementCount){
       clickedYear.classList.add('year-event-exist');
     }else{
